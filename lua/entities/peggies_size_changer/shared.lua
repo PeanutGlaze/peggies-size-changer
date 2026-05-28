@@ -6,7 +6,7 @@ ENT.Category 	= "Peggie's Size Changer"
 ENT.Spawnable 	= true
 ENT.AdminOnly 	= true
 
-ENT.player_table = {}
+ENT.player_table = ENT.player_table or {}
 ENT.model_table = {
     "models/player/TurretGirlv4.mdl",
     "models/player/Suits/robber_open.mdl",

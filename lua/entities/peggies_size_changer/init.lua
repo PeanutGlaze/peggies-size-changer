@@ -15,11 +15,11 @@ function ENT:Initialize()
 end
 
 function ENT:Think()
-    local entities = ents.FindInSphere(self:GetPos(), 175)
+    local entities = player.GetAll()
 
-    for k, v in pairs(entities) do
-        if v:IsValid() and v:IsPlayer() and v:Alive() and v:GetPos():Distance(self:GetPos()) <= 175 and not table.HasValue(self.player_table, v) then
-            table.insert(self.player_table, v)
+    for k, v in ipairs(entities) do
+        if v:IsValid() and v:Alive() and v:GetPos():Distance(self:GetPos()) <= 175 and not self.player_table[v] then
+            self.player_table[v] = true
             v.original_scale = v:GetModelScale()
             v.original_model = v:GetModel()
         end
@@ -33,21 +33,21 @@ function ENT:Think()
         
         -- Change the player's model:
         if rand2 > #self.model_table then
-            v:SetModel(v.original_model)
+            k:SetModel(k.original_model)
         else
-            v:SetModel(self.model_table[rand2])
+            k:SetModel(self.model_table[rand2])
         end
 
         -- Make sure the player doesn't get bigger than 200% or smaller than 40%
-        if v:GetModelScale() * scale >= 1.7 or v:GetModelScale() * scale <= 0.3 then continue end
+        if k:GetModelScale() * scale >= 1.7 or k:GetModelScale() * scale <= 0.3 then continue end
 
-        v:SetModelScale(v:GetModelScale() * scale, 2)
+        k:SetModelScale(k:GetModelScale() * scale, 2)
 
-        if v:GetPos():Distance(self:GetPos()) >= 175 then
-            table.RemoveByValue(self.player_table, v)
-            table.RemoveByValue(entities, v)
-            v:SetModelScale(v.original_scale, 3)
-            v:SetModel(v.original_model)
+        if k:GetPos():Distance(self:GetPos()) >= 175 then
+            self.player_table[k] = nil
+            table.RemoveByValue(entities, k)
+            k:SetModelScale(k.original_scale, 3)
+            k:SetModel(k.original_model)
         end
     end
 
